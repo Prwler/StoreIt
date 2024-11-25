@@ -1,6 +1,6 @@
 import Card from "@/components/Card";
 import Sort from "@/components/Sort";
-import { getFiles } from "@/lib/actions/file.actions";
+import { getFiles, getTotalSpaceByType } from "@/lib/actions/file.actions";
 import { getFileTypesParams } from "@/lib/utils";
 import { Models } from "node-appwrite";
 import React from "react";
@@ -10,7 +10,9 @@ const page = async ({ searchParams, params }: SearchParamProps) => {
   const searchText = ((await searchParams)?.query as string) || "";
   const sort = ((await searchParams)?.sort as string) || "";
   const types = getFileTypesParams(type) as FileType[];
-  const files = await getFiles({types, searchText, sort});
+  const files = await getFiles({ types, searchText, sort });
+  // const totalSpaceUsed = await getTotalSpaceByType(type);
+  // const totalSpaceUsedMB = (totalSpaceUsed / (1024 * 1024)).toFixed(2);
 
 
   return (

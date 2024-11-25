@@ -111,7 +111,7 @@ export const getFiles = async ({
       queries
     );
 
-    console.log({ files });
+    //console.log({ files });
     return parseStringify(files);
   } catch (error) {
     handleError(error, "Failed to get files");
@@ -234,3 +234,31 @@ export async function getTotalSpaceUsed() {
     handleError(error, "Error calculating total space used:, ");
   }
 }
+
+//SELF INSERT =========================================
+export async function getTotalSpaceByType(fileType: FileType) {
+  try {
+    const { databases } = await createSessionClient();
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User is not authenticated.");
+
+    // Query files of the specific type
+    const files = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      [Query.equal("owner", [currentUser.$id]), Query.equal("type", [fileType])]
+    );
+
+    // Calculate the total space used by this file type
+    let totalSize = 0;
+    files.documents.forEach((file) => {
+      totalSize += file.size;
+    });
+
+    return totalSize; // Return the total size in bytes
+  } catch (error) {
+    handleError(error, "Error calculating total space used for the file type.");
+    return 0;
+  }
+}
+
