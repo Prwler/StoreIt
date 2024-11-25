@@ -10,7 +10,7 @@ const page = async ({ searchParams, params }: SearchParamProps) => {
   const searchText = ((await searchParams)?.query as string) || "";
   const sort = ((await searchParams)?.sort as string) || "";
   const types = getFileTypesParams(type) as FileType[];
-  const files = await getFiles({ types, searchText, sort });
+  const files = await getFiles({types, searchText, sort});
 
 
   return (
@@ -27,14 +27,16 @@ const page = async ({ searchParams, params }: SearchParamProps) => {
           </div>
         </div>
       </section>
-      {/*Render the files*/}
+      {/* Render the files */}
       {files.total > 0 ? (
         <section className="file-list">
-            {files.document.map((file: Models.Document) => (
-                <Card key={file.$id} file={file}/>
-            ))}
+          {files.documents.map((file: Models.Document) => (
+            <Card key={file.$id} file={file} />
+          ))}
         </section>
-      ): <p className="empty-list">No files uploaded</p>}
+      ) : (
+        <p className="empty-list">No files uploaded</p>
+      )}
     </div>
   );
 };
